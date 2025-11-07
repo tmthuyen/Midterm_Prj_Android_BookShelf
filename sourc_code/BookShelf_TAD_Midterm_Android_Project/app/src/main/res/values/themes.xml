@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.BookShelf" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+    <!-- App theme chính -->
+    <style name="Theme.BookShelf" parent="Theme.Material3.DayNight">
+        <!-- Ẩn ActionBar (Compose không cần) -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
 
-    <style name="Theme.BookShelf" parent="Base.Theme.BookShelf" />
+        <!-- Tuỳ chọn màu status bar -->
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <!-- Có thể thêm:
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        -->
+    </style>
 </resources>
