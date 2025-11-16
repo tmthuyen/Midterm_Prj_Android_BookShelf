@@ -1,7 +1,6 @@
 package com.example.myapplication.data.repository;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -85,13 +84,7 @@ public class BookRepository {
         return bookDao.getAllBooks();
     }
     public void insertBook(Book book){
-        executor.execute(() -> {
-            try{
-                bookDao.insert(book);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+        executor.execute(() -> bookDao.insert(book));
     }
     public void deleteBook(Book book){
         executor.execute(() -> bookDao.delete(book));
