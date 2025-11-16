@@ -39,6 +39,8 @@ public class Book implements Serializable {
      */
     private int readingStatus;
 
+    public Book(){}
+
     public Book(@NonNull String id, String title, String authors, String description,
                 String thumbnail, String previewLink,Double averageRating,
                 int ratingsCount,

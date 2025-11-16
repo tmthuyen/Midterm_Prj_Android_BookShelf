@@ -22,8 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.Book;
+import com.example.myapplication.model.mappers.BookMapper;
 import com.example.myapplication.ui.adapters.SearchAdapter;
 import com.example.myapplication.ui.adapters.SearchFilter;
+import com.example.myapplication.ui.viewmodel.CurrentBookViewModel;
 import com.example.myapplication.ui.viewmodel.SearchViewModel;
 import com.example.myapplication.model.VolumeItem;
 import com.google.android.material.chip.Chip;
@@ -38,6 +41,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment {
+    private CurrentBookViewModel currentBookViewModel;
     private SearchViewModel searchViewModel;
     private SearchAdapter adapter;
     private EditText searchEditText;
@@ -120,8 +124,15 @@ public class SearchFragment extends Fragment {
                 getViewLifecycleOwner(),
                 this::updateSearchResults
         );
+        initAndObserveViewModel();
+
         setupRealtimeSearch();
         setupChipFilters();
+    }
+
+    private void initAndObserveViewModel() {
+        currentBookViewModel = new ViewModelProvider(requireActivity())
+                .get(CurrentBookViewModel.class);
     }
     private void setupRealtimeSearch(){
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -206,10 +217,14 @@ public class SearchFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
     private void openBookDetail(VolumeItem item){
+        // set current book
+        Book selectedBook = BookMapper.fromVolumeItem(item);
+        currentBookViewModel.setCurrentBook(selectedBook);
+
         BookDetailFragment fragment = new BookDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("volumeItem", item);
-        fragment.setArguments(args);
+//        Bundle args = new Bundle();
+//        args.putSerializable("volumeItem", item);
+//        fragment.setArguments(args);
 
         FragmentTransaction transaction =
                 requireActivity().getSupportFragmentManager().beginTransaction();
