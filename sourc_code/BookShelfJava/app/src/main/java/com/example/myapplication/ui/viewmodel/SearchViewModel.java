@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapplication.data.repository.BookRepository;
+import com.example.myapplication.model.Book;
 import com.example.myapplication.ui.adapters.SearchFilter;
 import com.example.myapplication.model.VolumeItem;
 
@@ -37,6 +38,15 @@ public class SearchViewModel extends AndroidViewModel {
         if (currentQuery != null && !currentQuery.trim().isEmpty()) {
             repository.searchBooksOnline(currentQuery, filter);
         }
+    }
+    public void saveTolibrary(Book book){
+        repository.insertBook(book);
+    }
+    public void deleteFromLibrary(Book book){
+        repository.deleteBook(book);
+    }
+    public void updateReadingStatus(String bookId, int status) {
+        repository.updateReadingStatus(bookId, status); // hàm này mình thấy có trong repo của bạn
     }
 
 }

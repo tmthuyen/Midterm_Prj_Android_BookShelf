@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_view_detail"
+        android:title="Xem chi tiết" />
+    <item
+        android:id="@+id/action_add_to_library"
+        android:title="Thêm vào thư viện" />
+    <item
+        android:id="@+id/action_mark_reading"
+        android:title="Đánh dấu: Đang đọc" />
+    <item
+        android:id="@+id/action_mark_completed"
+        android:title="Đánh dấu: Hoàn thành" />
+    <item
+        android:id="@+id/action_open_preview"
+        android:title="Đọc thử / Preview" />
+    <item
+        android:id="@+id/action_download_epub"
+        android:title="Tải EPUB" />
+    <item
+        android:id="@+id/action_delete_from_library"
+        android:title="Xoá khỏi thư viện" />
+</menu>

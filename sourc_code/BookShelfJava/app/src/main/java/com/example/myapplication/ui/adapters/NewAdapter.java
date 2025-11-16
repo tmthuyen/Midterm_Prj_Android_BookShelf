@@ -18,8 +18,24 @@ import java.util.List;
 public class NewAdapter extends RecyclerView.Adapter<BookViewHolder> {
     private final Context context;
     private final List<VolumeItem> books = new ArrayList<>();
+    public interface OnItemClickListener {
+        void onItemClick(VolumeItem item);
+    }
+
+    public interface OnMoreClickListener {
+        void onMoreClick(View anchor, VolumeItem item);
+    }
+    private OnItemClickListener itemClickListener;
+    private OnMoreClickListener moreClickListener;
     public NewAdapter(Context context) {
         this.context = context;
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+    public void setOnMoreClickListener(OnMoreClickListener listener) {
+        this.moreClickListener = listener;
     }
     public void setItems(List<VolumeItem> items) {
         books.clear();
@@ -58,6 +74,19 @@ public class NewAdapter extends RecyclerView.Adapter<BookViewHolder> {
             } else {
                 holder.ivCover.setImageResource(R.drawable.placeholder_cover);
             }
+        }
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(item);
+            }
+        });
+
+        if (holder.btnMore != null) {
+            holder.btnMore.setOnClickListener(v -> {
+                if (moreClickListener != null) {
+                    moreClickListener.onMoreClick(holder.btnMore, item);
+                }
+            });
         }
     }
 

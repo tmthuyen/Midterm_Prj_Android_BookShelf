@@ -101,7 +101,6 @@ public class HomeFragment extends Fragment {
         setupRecycler(trendingRecycler, trendingAdapter);
         setupRecycler(newRecycler, newAdapter);
         setupRecycler(freeRecycler, freeAdapter);
-
         loadTrendingBooks();
         loadNewBooks();
         loadFreeBooks();

@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.adapters;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,10 +14,12 @@ public class BookViewHolder extends RecyclerView.ViewHolder{
     public ImageView ivCover;
     public TextView tvTitle;
     public TextView tvAuthor;
+    public ImageButton btnMore;
     public BookViewHolder(@NonNull View itemView) {
         super(itemView);
         ivCover  = itemView.findViewById(R.id.img_cover);
         tvTitle  = itemView.findViewById(R.id.tv_title);
         tvAuthor = itemView.findViewById(R.id.tv_author);
+        btnMore = itemView.findViewById(R.id.btn_more);
     }
 }

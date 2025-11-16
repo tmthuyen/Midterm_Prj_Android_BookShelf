@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,12 +22,19 @@ import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
     private final List<VolumeItem> items = new ArrayList<>();
-    private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(VolumeItem item);
     }
+    private OnItemClickListener itemClickListener;
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+        this.itemClickListener = listener;
+    }
+    public interface OnMoreClickListener {
+        void onMoreClick(View anchor, VolumeItem item);
+    }
+    private OnMoreClickListener moreClickListener;
+    public void setOnMoreClickListener(OnMoreClickListener listener) {
+        this.moreClickListener = listener;
     }
     public void setItems(List<VolumeItem> newItems) {
         items.clear();
@@ -35,7 +43,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
         notifyDataSetChanged();
     }
-
+    public void clear() {
+        items.clear();
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -77,8 +88,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             holder.coverImageView.setImageResource(R.drawable.placeholder_cover);
         }
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
+            if (itemClickListener != null) itemClickListener.onItemClick(item);
+        });
+        holder.btnMore.setOnClickListener(v -> {
+            if (moreClickListener != null) {
+                moreClickListener.onMoreClick(holder.btnMore, item);
             }
         });
     }
@@ -92,11 +106,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         ImageView coverImageView;
         TextView titleText;
         TextView authorText;
+        ImageButton btnMore;
         SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             coverImageView = itemView.findViewById(R.id.img_cover);
             titleText = itemView.findViewById(R.id.tv_title);
             authorText = itemView.findViewById(R.id.tv_author);
+            btnMore = itemView.findViewById(R.id.btn_more);
         }
 
     }
