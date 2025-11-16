@@ -13,24 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.example.myapplication.R;
-import com.example.myapplication.model.AccessInfo;
-import com.example.myapplication.model.Book;
-import com.example.myapplication.model.Epub;
-import com.example.myapplication.model.ImageLinks;
-import com.example.myapplication.model.SaleInfo;
-import com.example.myapplication.model.VolumeInfo;
 import com.example.myapplication.ui.adapters.SearchAdapter;
 import com.example.myapplication.ui.adapters.SearchFilter;
 import com.example.myapplication.ui.viewmodel.SearchViewModel;
@@ -47,9 +38,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class SearchFragment extends Fragment {
-    private static final int STATUS_READING = 1;
-    private static final int STATUS_DOWNLOADED = 2;
-    private static final int STATUS_COMPLETED = 3;
     private SearchViewModel searchViewModel;
     private SearchAdapter adapter;
     private EditText searchEditText;
@@ -126,16 +114,12 @@ public class SearchFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(this::openBookDetail);
-        adapter.setOnMoreClickListener((anchor, volumeItem) -> {
-            showMoreMenu(anchor, volumeItem);
-        });
         searchViewModel = new ViewModelProvider(requireActivity())
                 .get(SearchViewModel.class);
         searchViewModel.getSearchResults().observe(
                 getViewLifecycleOwner(),
                 this::updateSearchResults
         );
-
         setupRealtimeSearch();
         setupChipFilters();
     }
@@ -143,7 +127,9 @@ public class SearchFragment extends Fragment {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 currentQuery = s.toString().trim();
@@ -157,6 +143,7 @@ public class SearchFragment extends Fragment {
                     searchViewModel.search(currentQuery);
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -223,6 +210,7 @@ public class SearchFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable("volumeItem", item);
         fragment.setArguments(args);
+
         FragmentTransaction transaction =
                 requireActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -242,135 +230,5 @@ public class SearchFragment extends Fragment {
             );
             chip.setTextColor(Color.parseColor("#0F172A"));
         }
-    }
-    private void showMoreMenu(View anchor, VolumeItem volumeItem){
-        PopupMenu popup = new PopupMenu(requireContext(), anchor);
-        popup.getMenuInflater().inflate(R.menu.menu_book_more, popup.getMenu());
-        popup.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.action_view_detail) {
-                openBookDetail(volumeItem);
-                return true;
-            }
-            Book book = mapVolumeItemToBook(volumeItem, 0);
-            if (id == R.id.action_add_to_library) {
-                addToLibrary(book);
-                return true;
-            } else if (id == R.id.action_mark_reading) {
-                markAsStatus(book, STATUS_READING);
-                return true;
-            } else if (id == R.id.action_open_preview) {
-                openPreview(volumeItem);
-                return true;
-            } else if (id == R.id.action_download_epub) {
-                downloadEpub(book);
-                return true;
-            } else if (id == R.id.action_delete_from_library) {
-                deleteFromLibrary(book);
-                return true;
-            }
-            return false;
-        });
-        popup.show();
-    }
-    private void addToLibrary(Book book){
-        if(book == null || TextUtils.isEmpty(book.getId())){
-            Toast.makeText(getContext(), "Không có Id để lưu", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        searchViewModel.saveTolibrary(book);
-        Toast.makeText(getContext(), "Đã thêm vào thư viện", Toast.LENGTH_SHORT).show();
-    }
-    private void deleteFromLibrary(Book book){
-        searchViewModel.deleteFromLibrary(book);
-        Toast.makeText(getContext(), "Đã xoá khỏi thư viện", Toast.LENGTH_SHORT).show();
-    }
-    private void markAsStatus(Book book, int status){
-        book.setReadingStatus(status);
-        searchViewModel.updateReadingStatus(book.getId(), status);
-        Toast.makeText(getContext(), "Cập nhật trạng thái thành công", Toast.LENGTH_SHORT).show();
-    }
-    private void openPreview(VolumeItem item){
-        VolumeInfo info = item.getVolumeInfo();
-        String previewLink = info != null ? info.getPreviewLink() : null;
-        if (previewLink == null || previewLink.isEmpty()) {
-            Toast.makeText(getContext(), "Sách này không có preview", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        //chưa code xong mốt code tiếp
-    }
-    private void downloadEpub(Book book) {
-        // chưa code xong mốt code tiếp
-    }
-    private Book mapVolumeItemToBook(VolumeItem volumeItem, int readingStatus) {
-        VolumeInfo info = volumeItem.getVolumeInfo();
-        SaleInfo saleInfo = volumeItem.getSaleInfo();
-        AccessInfo accessInfo = volumeItem.getAccessInfo();
-        ImageLinks imageLinks = info != null ? info.getImageLinks() : null;
-        Epub epub = accessInfo != null ? accessInfo.getEpub() : null;
-        String id = volumeItem.getId();
-        if (id == null){
-            Toast.makeText(getContext(), "Không có Id để lưu", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        String title = info != null ? info.getTitle() : "";
-        String authors = "";
-        if (info != null && info.getAuthors() != null) {
-            authors = TextUtils.join(", ", info.getAuthors());
-        }
-        String description = info != null ? info.getDescription() : "";
-        String thumbnail = imageLinks != null ? imageLinks.getThumbnail() : "";
-        String previewLink = info != null ? info.getPreviewLink() : "";
-        Double averageRating = null;
-        if (info != null && info.getAverageRating() != null) {
-            averageRating = info.getAverageRating();
-        }
-        int ratingsCount = 0;
-        if (info != null && info.getRatingsCount() != null) {
-            ratingsCount = info.getRatingsCount();  // lúc này chắc chắn không null
-        }
-        int pageCount = 0;
-        if (info != null && info.getPageCount() != null) {
-            pageCount = info.getPageCount();
-        }
-        String publishedDate = info != null ? info.getPublishedDate() : "";
-        String language = info != null ? info.getLanguage() : "";
-        String publisher = info != null ? info.getPublisher() : "";
-        String categories = "";
-        if (info != null && info.getCategories() != null) {
-            categories = TextUtils.join(", ", info.getCategories());
-        }
-        String format = info != null ? info.getPrintType() : "";
-
-        boolean isFree = false;
-        if (saleInfo != null && saleInfo.getSaleability() != null) {
-            // Tuỳ bạn parse, ví dụ FREE, FOR_SALE...
-            isFree = "FREE".equalsIgnoreCase(saleInfo.getSaleability());
-        }
-
-        boolean hasEpub = epub != null && Boolean.TRUE.equals(epub.getIsAvailable());
-
-        Book book = new Book(
-                id,
-                title,
-                authors,
-                description,
-                thumbnail,
-                previewLink,
-                averageRating,
-                ratingsCount,
-                pageCount,
-                publishedDate,
-                language,
-                publisher,
-                categories,
-                format,
-                readingStatus,
-                isFree,
-                hasEpub
-        );
-        return book;
     }
 }

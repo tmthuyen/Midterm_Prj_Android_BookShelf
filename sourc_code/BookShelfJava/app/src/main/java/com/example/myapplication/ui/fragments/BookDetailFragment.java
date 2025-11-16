@@ -2,13 +2,24 @@ package com.example.myapplication.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.Book;
+import com.example.myapplication.ui.viewmodel.CurrentBookViewModel;
+import com.example.myapplication.ui.viewmodel.LibraryViewModel;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,33 +28,28 @@ import com.example.myapplication.R;
  */
 public class BookDetailFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    //
+//<!--       image_cover,  text_title, text_author, layout_metadata,  text_rating text_pages
+//    text_year text_description button_library  button_preview  text_format text_language text_publisher recycler_similar-->
+    private ImageView image_cover;
+    private TextView text_title, text_author, text_rating, text_pages, text_year,
+            text_format, text_language, text_publisher, text_description;
+    private Button button_library, button_preview;
+    private RecyclerView recycler_similar;
+    private CurrentBookViewModel currentBookViewModel;
+    private LibraryViewModel libraryViewModel;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public BookDetailFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BookDetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static BookDetailFragment newInstance(String param1, String param2) {
         BookDetailFragment fragment = new BookDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,8 +58,8 @@ public class BookDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -63,4 +69,80 @@ public class BookDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_book_detail, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initView(view);
+
+        initAndObserveViewModel();
+
+        handleClickView();
+    }
+
+    private void initAndObserveViewModel() {
+        currentBookViewModel = new ViewModelProvider(requireActivity()).get(CurrentBookViewModel.class);
+        // tra ve book va call bindView(book)
+        currentBookViewModel.getCurrentBook().observe(getViewLifecycleOwner(), this::bindView);
+
+        libraryViewModel = new ViewModelProvider(requireActivity()).get(LibraryViewModel.class);
+    }
+
+    private void initView(View view) {
+        image_cover = view.findViewById(R.id.image_cover);
+        text_title = view.findViewById(R.id.text_title);
+        text_author = view.findViewById(R.id.text_author);
+//        layout_metadata = view.findViewById(R.id.layout_metadata);
+        text_rating = view.findViewById(R.id.text_rating);
+        text_pages = view.findViewById(R.id.text_pages);
+        text_year = view.findViewById(R.id.text_year);
+        text_description = view.findViewById(R.id.text_description);
+        button_library = view.findViewById(R.id.button_library);
+        button_preview = view.findViewById(R.id.button_preview);
+        text_format = view.findViewById(R.id.text_format);
+        text_language = view.findViewById(R.id.text_language);
+        text_publisher = view.findViewById(R.id.text_publisher);
+        recycler_similar = view.findViewById(R.id.recycler_similar);
+    }
+
+    private void bindView(Book book) {
+        if (book == null) return;
+        Picasso.get()
+                .load(book.getThumbnail())
+                .placeholder(R.drawable.placeholder_cover)
+                .into(image_cover);
+
+        text_title.setText(book.getTitle());
+        text_author.setText(book.getAuthors());
+        text_rating.setText(book.getRatingsCount().toString());
+        text_pages.setText(book.getPageCount().toString());
+        text_year.setText(book.getPublishedDate());
+        text_description.setText(book.getDescription());
+        text_format.setText(book.getFormat());
+        text_language.setText(book.getLanguage());
+        text_publisher.setText(book.getPublisher());
+
+    }
+
+    private void handleClickView() {
+        if (button_library == null) return;
+        button_library.setOnClickListener(v -> {
+            // call insert Room
+            if (libraryViewModel == null) return;
+            libraryViewModel.addBook(currentBookViewModel.getCurrentBook().getValue());
+        });
+
+        if (button_preview == null) return;
+        button_preview.setOnClickListener(v -> {
+
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        currentBookViewModel.getCurrentBook().removeObservers(getViewLifecycleOwner());
+    }
+
 }
