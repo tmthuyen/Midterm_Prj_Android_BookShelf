@@ -1,6 +1,5 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +21,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.example.myapplication.R;
+import com.example.myapplication.ui.adapters.SearchAdapter;
+import com.example.myapplication.ui.adapters.SearchFilter;
+import com.example.myapplication.ui.viewmodel.SearchViewModel;
 import com.example.myapplication.model.VolumeItem;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;

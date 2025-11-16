@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.local;
 
 import android.content.Context;
 
@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.myapplication.data.local.dao.BookDao;
 import com.example.myapplication.model.Book;
 
 @Database(entities = {Book.class}, version = 1, exportSchema = false)

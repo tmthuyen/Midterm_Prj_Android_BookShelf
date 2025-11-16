@@ -1,16 +1,17 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.adapters;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.model.ImageLinks;
+import com.example.myapplication.R;
 import com.example.myapplication.model.VolumeInfo;
 import com.example.myapplication.model.VolumeItem;
 import com.squareup.picasso.Picasso;

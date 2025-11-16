@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.viewmodel;
 
 import android.app.Application;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.myapplication.data.repository.BookRepository;
 import com.example.myapplication.model.Book;
 
 import java.util.List;

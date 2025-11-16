@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui.viewmodel;
 
 import android.app.Application;
 
@@ -7,7 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.myapplication.model.Book;
+import com.example.myapplication.data.repository.BookRepository;
+import com.example.myapplication.ui.adapters.SearchFilter;
 import com.example.myapplication.model.VolumeItem;
 
 import java.util.List;

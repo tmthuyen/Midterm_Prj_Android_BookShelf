@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.data.remote;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

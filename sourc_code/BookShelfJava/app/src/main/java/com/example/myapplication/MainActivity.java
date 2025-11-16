@@ -12,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.ui.fragments.HomeFragment;
+import com.example.myapplication.ui.fragments.LibraryFragment;
+import com.example.myapplication.ui.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
