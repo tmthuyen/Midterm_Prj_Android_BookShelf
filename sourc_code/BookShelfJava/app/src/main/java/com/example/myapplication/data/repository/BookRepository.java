@@ -1,10 +1,17 @@
 package com.example.myapplication.data.repository;
 
+import static androidx.lifecycle.AndroidViewModel_androidKt.getApplication;
+
+
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.data.remote.ApiClient;
 import com.example.myapplication.data.remote.ApiServer;
 import com.example.myapplication.data.local.dao.BookDao;
@@ -13,6 +20,7 @@ import com.example.myapplication.ui.adapters.SearchFilter;
 import com.example.myapplication.model.Book;
 import com.example.myapplication.model.VolumeItem;
 import com.example.myapplication.model.VolumeResponse;
+import com.example.myapplication.uitls.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +36,10 @@ public class BookRepository {
     private final ApiServer apiServer;
     private final Executor executor;
     private final MutableLiveData<List<VolumeItem>>remoteSearchResults = new MutableLiveData<>();
+    private Application application;
     public BookRepository(Application application) {
         BookDatabase db = BookDatabase.getInstance(application);
+        this.application = application;
         bookDao = db.bookDao();
         apiServer = ApiClient.getApiService();
         executor = Executors.newSingleThreadExecutor();
@@ -84,7 +94,29 @@ public class BookRepository {
         return bookDao.getAllBooks();
     }
     public void insertBook(Book book){
-        executor.execute(() -> bookDao.insert(book));
+        Toast.makeText(application, "insert book", Toast.LENGTH_SHORT).show();
+        executor.execute(() -> {
+            Log.d("BookRepository", "Inserting book with ID: " + book.getId());
+            // 1. tải thumbnail nếu có URL
+            if (book.getThumbnail() != null && !book.getThumbnail().isEmpty()) {
+                try {
+                    Bitmap bmp = Glide.with(application)
+                            .asBitmap()
+                            .load(book.getThumbnail())
+                            .submit()
+                            .get();
+
+
+                    if (bmp != null) {
+                        String path = FileUtils.saveBitmapToExternalAppFolder(application, bmp, "thumb_" + book.getId());
+                        book.setLocalThumbnail(path);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            bookDao.insert(book);
+        });
     }
     public void deleteBook(Book book){
         executor.execute(() -> bookDao.delete(book));

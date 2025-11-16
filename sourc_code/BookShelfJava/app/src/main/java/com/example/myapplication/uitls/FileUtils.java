@@ -2,6 +2,7 @@ package com.example.myapplication.uitls;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,11 +43,13 @@ public class FileUtils {
         }
 
         File file = new File(dir, fileName + ".jpg");
+        Log.d("FileUtils", "saveBitmapToExternalAppFolder: " + file.getAbsolutePath());
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
             fos.flush();
+
             return file.getAbsolutePath();   // lưu path này vào Room
         } catch (Exception e) {
             e.printStackTrace();

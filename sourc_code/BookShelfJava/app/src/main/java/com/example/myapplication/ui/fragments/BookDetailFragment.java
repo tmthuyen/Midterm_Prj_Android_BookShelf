@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Book;
@@ -131,6 +132,7 @@ public class BookDetailFragment extends Fragment {
             // call insert Room
             if (libraryViewModel == null) return;
             libraryViewModel.addBook(currentBookViewModel.getCurrentBook().getValue());
+            Toast.makeText(getContext(), "Add to library successfully", Toast.LENGTH_SHORT).show();
         });
 
         if (button_preview == null) return;

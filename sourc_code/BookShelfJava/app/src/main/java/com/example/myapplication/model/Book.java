@@ -18,6 +18,7 @@ public class Book implements Serializable {
     private String authors;
     private String description;
     private String thumbnail;
+    private String localThumbnail;
     private String previewLink;
     private Double averageRating;
     private int ratingsCount;
@@ -110,6 +111,12 @@ public class Book implements Serializable {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+    public String getLocalThumbnail() {
+        return localThumbnail;
+    }
+    public void setLocalThumbnail(String localThumbnail) {
+        this.localThumbnail = localThumbnail;
     }
 
     public String getPreviewLink() {
