@@ -1,10 +1,14 @@
 package com.example.myapplication.model.mappers;
 
+import android.util.Log;
+
 import com.example.myapplication.model.AccessInfo;
 import com.example.myapplication.model.Book;
 import com.example.myapplication.model.SaleInfo;
 import com.example.myapplication.model.VolumeInfo;
 import com.example.myapplication.model.VolumeItem;
+
+import retrofit2.http.Tag;
 
 public class BookMapper {
 
@@ -65,7 +69,7 @@ public class BookMapper {
         book.setFree(isFree);
         book.setHasEpub(hasEpub);
         book.setReadingStatus(Book.STATUS_DEFAULT);
-
+        Log.d("Mapper", "fromVolumeItem: " + book.getAverageRating());
         return book;
     }
 }

@@ -5,20 +5,33 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.myapplication.data.remote.ApiClient;
 import com.example.myapplication.data.remote.ApiServer;
 import com.example.myapplication.R;
+import com.example.myapplication.data.repository.BookRepository;
+import com.example.myapplication.model.AccessInfo;
+import com.example.myapplication.model.Book;
+import com.example.myapplication.model.Epub;
+import com.example.myapplication.model.ImageLinks;
+import com.example.myapplication.model.SaleInfo;
+import com.example.myapplication.model.VolumeInfo;
 import com.example.myapplication.model.VolumeItem;
 import com.example.myapplication.model.VolumeResponse;
+import com.example.myapplication.model.mappers.BookMapper;
 import com.example.myapplication.ui.adapters.SearchAdapter;
+import com.example.myapplication.ui.viewmodel.SearchViewModel;
 
 import java.util.List;
 
@@ -63,6 +76,9 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    private static final int STATUS_READING = 1;
+    private static final int STATUS_DOWNLOADED = 2;
+    private static final int STATUS_COMPLETED = 3;
     private RecyclerView trendingRecycler;
     private RecyclerView newRecycler;
     private RecyclerView freeRecycler;
@@ -70,7 +86,7 @@ public class HomeFragment extends Fragment {
     private SearchAdapter trendingAdapter;
     private SearchAdapter newAdapter;
     private SearchAdapter freeAdapter;
-
+    private SearchViewModel searchViewModel;
     private ApiServer apiServer;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +114,22 @@ public class HomeFragment extends Fragment {
         trendingAdapter = new SearchAdapter();
         newAdapter = new SearchAdapter();
         freeAdapter = new SearchAdapter();
+        searchViewModel = new ViewModelProvider(requireActivity())
+                .get(SearchViewModel.class);
+        trendingAdapter.setOnItemClickListener(this::openBookDetail);
+
+        trendingAdapter.setOnMoreClickListener((anchor, volumeItem) -> {
+            showMoreMenu(anchor, volumeItem);
+        });
+
+        newAdapter.setOnMoreClickListener((anchor, volumeItem) -> {
+            showMoreMenu(anchor, volumeItem);
+        });
+        freeAdapter.setOnMoreClickListener((anchor, volumeItem) -> {
+            showMoreMenu(anchor, volumeItem);
+        });
+        newAdapter.setOnItemClickListener(this::openBookDetail);
+        freeAdapter.setOnItemClickListener(this::openBookDetail);
         setupRecycler(trendingRecycler, trendingAdapter);
         setupRecycler(newRecycler, newAdapter);
         setupRecycler(freeRecycler, freeAdapter);
@@ -179,5 +211,78 @@ public class HomeFragment extends Fragment {
         if (isAdded()) {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
         }
+    }
+    private void openBookDetail(VolumeItem item){
+        BookDetailFragment fragment = new BookDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("volumeItem", item);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction =
+                requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+    private void showMoreMenu(View anchor, VolumeItem volumeItem){
+        PopupMenu popup = new PopupMenu(requireContext(), anchor);
+        popup.getMenuInflater().inflate(R.menu.menu_book_more, popup.getMenu());
+        popup.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.action_view_detail) {
+                openBookDetail(volumeItem);
+                return true;
+            }
+            Book book = BookMapper.fromVolumeItem(volumeItem);
+            if (id == R.id.action_add_to_library) {
+                addToLibrary(book);
+                return true;
+            } else if (id == R.id.action_mark_reading) {
+                markAsStatus(book, STATUS_READING);
+                return true;
+            } else if (id == R.id.action_open_preview) {
+                openPreview(volumeItem);
+                return true;
+            } else if (id == R.id.action_download_epub) {
+                downloadEpub(book);
+                return true;
+            } else if (id == R.id.action_delete_from_library) {
+                deleteFromLibrary(book);
+                return true;
+            }
+            return false;
+        });
+        popup.show();
+    }
+    private void addToLibrary(Book book){
+        if(book == null || TextUtils.isEmpty(book.getId())){
+            Toast.makeText(getContext(), "Không có Id để lưu", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        searchViewModel.saveTolibrary(book);
+        Toast.makeText(getContext(), "Đã thêm vào thư viện", Toast.LENGTH_SHORT).show();
+    }
+    private void deleteFromLibrary(Book book){
+        searchViewModel.deleteFromLibrary(book);
+        Toast.makeText(getContext(), "Đã xoá khỏi thư viện", Toast.LENGTH_SHORT).show();
+    }
+    private void markAsStatus(Book book, int status){
+        book.setReadingStatus(status);
+        searchViewModel.updateReadingStatus(book.getId(), status);
+        Toast.makeText(getContext(), "Cập nhật trạng thái thành công", Toast.LENGTH_SHORT).show();
+    }
+    private void openPreview(VolumeItem item){
+        VolumeInfo info = item.getVolumeInfo();
+        String previewLink = info != null ? info.getPreviewLink() : null;
+        if (previewLink == null || previewLink.isEmpty()) {
+            Toast.makeText(getContext(), "Sách này không có preview", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //chưa code xong mốt code tiếp
+    }
+    private void downloadEpub(Book book) {
+        // chưa code xong mốt code tiếp
     }
 }
