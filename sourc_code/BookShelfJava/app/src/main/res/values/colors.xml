@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#1565C0</color> <!-- Blue 800 -->
+    <color name="colorPrimaryDark">#1E88E5</color> <!-- Primary variant -->
+    <color name="colorAccent">#03A9F4</color> <!-- Secondary (Bright Blue) -->
+    <color name="colorTertiary">#7CB5F9</color> <!-- Subtle accent -->
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <!-- Neutral palette -->
+    <color name="neutralDark">#0F172A</color>
+    <color name="neutralMedium">#334155</color>
+    <color name="neutralLight">#64748B</color>
+    <color name="neutralExtraLight">#E2E8F0</color>
+    <color name="colorSurface">#FFFFFF</color>
+</resources>
