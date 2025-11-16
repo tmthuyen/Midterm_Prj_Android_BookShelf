@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <!-- Secondary & tertiary accents -->
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorSecondaryVariant">@color/colorTertiary</item>
+        <item name="colorOnSecondary">@color/colorOnPrimary</item>
+
+        <!-- Surfaces / backgrounds -->
+        <item name="colorSurface">@color/colorSurface</item>
+
+        <!-- Status bar (light mode) -->
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+
+        <!-- Default rounded corners for Material components -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MediumComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.MediumComponent</item>
+    </style>
+
+    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
+    <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+</resources>

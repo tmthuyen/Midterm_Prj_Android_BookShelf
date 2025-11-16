@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">BookShelf</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Enter book title, author or ISBN...</string>
+    <string name="no_results">No results found</string>
+    <string name="unknown_author">Unknown author</string>
+    <string name="library_title">My Library</string>
+    <string name="author_format">By %1$s</string>
+    <string name="publisher_format">%1$s • %2$s</string>
+    <string name="page_count_format">Pages: %1$d</string>
+    <string name="rating_format">Rating: %1$.1f</string>
+    <string name="book_saved">Book saved to your library</string>
+    <string name="error_loading_book">Error loading book</string>
+    <string name="save">Save</string>
+    <string name="preview">Preview</string>
+    <string name="title_home">Khám phá</string>
+    <string name="title_search">Tìm kiếm</string>
+    <string name="title_library">Thư viện</string>
+    <string name="title_settings">Cài đặt</string>
+    <!--  Microcopy for Home screen header and sections  -->
+    <string name="home_header">Khám phá sách hay hôm nay</string>
+    <string name="section_trending">Xu hướng</string>
+    <string name="section_new_releases">Mới phát hành</string>
+    <string name="section_free_preview">Miễn phí/Preview</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="no_results_title">Không tìm thấy kết quả</string>
+    <string name="no_results_sub">Thử thay đổi từ khóa hoặc bộ lọc nhé</string>
+    <string name="book_detail">Chi tiết sách</string>
+    <string name="book_cover">Book cover</string>
+    <string name="add_to_library">Add to Library</string>
+    <string name="read_preview">Xem Preview</string>
+    <string name="format">Format</string>
+    <string name="language">Language</string>
+    <string name="publisher">Publisher</string>
+    <string name="similar_books">Sách tương tự</string>
+</resources>
